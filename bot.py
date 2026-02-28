@@ -5,7 +5,7 @@ import threading
 BOT_TOKEN = "8603095714:AAH2qTQFGz6YW1GhobPchdkOPuZU8aEw1KY"
 CHANNEL_ID = -1002058703755
 PREVIEW_SECONDS = 120
-JOIN_LINK = "https://web.telegram.org/k/#@ghanaleaksnews"
+JOIN_LINK = "https://t.me/ghanaleaksnews"
 
 BASE = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
