@@ -7,40 +7,34 @@ from telegram.ext import (
     ContextTypes,
 )
 
-# ===== YOUR SETTINGS — EDIT THESE =====
-BOT_TOKEN = "PASTE_YOUR_BOT_TOKEN_HERE"
-CHANNEL_ID = -1001234567890  # Paste your Channel ID here
-PREVIEW_SECONDS = 60  # How many seconds before kick (60 = 1 minute)
-JOIN_LINK = "https://t.me/+yourinvitelink"  # Your paid/real join link
-# =======================================
+BOT_TOKEN = "8603095714:AAH2qTQFGz6YW1GhobPchdkOPuZU8aEw1KY"
+CHANNEL_ID = -1002058703755
+PREVIEW_SECONDS = 120
+JOIN_LINK = "https://web.telegram.org/k/#@ghanaleaksnews"
 
 logging.basicConfig(level=logging.INFO)
 
-# This stores users who have paid/verified — start empty
 verified_users = set()
 
 async def kick_after_preview(user_id, username, context):
     await asyncio.sleep(PREVIEW_SECONDS)
 
     if user_id in verified_users:
-        return  # They verified, don't kick
+        return
 
     try:
-        # Kick the user
         await context.bot.ban_chat_member(CHANNEL_ID, user_id)
-        # Immediately unban so they CAN come back after joining
         await asyncio.sleep(2)
         await context.bot.unban_chat_member(CHANNEL_ID, user_id)
 
-        # Send them a message
         await context.bot.send_message(
             chat_id=user_id,
             text=(
-                f"⏳ Hey! Your FREE preview has ended.\n\n"
-                f"To keep reading and access all files, click the button below 👇"
+                "Your FREE preview has ended.\n\n"
+                "To keep reading and access all files, click the button below"
             ),
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("✅ Join Full Channel", url=JOIN_LINK)]
+                [InlineKeyboardButton("Join Full Channel", url=JOIN_LINK)]
             ])
         )
         print(f"Kicked user: {username} ({user_id})")
@@ -59,7 +53,6 @@ async def on_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if new_status == "member":
         print(f"New member joined: {user.username} ({user.id})")
-        # Start the countdown to kick
         asyncio.create_task(kick_after_preview(user.id, user.username, context))
 
 
@@ -68,10 +61,3 @@ if __name__ == "__main__":
     app.add_handler(ChatMemberHandler(on_member_update, ChatMemberHandler.CHAT_MEMBER))
     print("Bot is running...")
     app.run_polling(allowed_updates=["chat_member"])
-```
-
----
-
-**FILE 2 — Create a file called `requirements.txt`**
-```
-python-telegram-bot==20.7
